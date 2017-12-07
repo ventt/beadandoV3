@@ -65,8 +65,8 @@ namespace beadandoV3
             }
 
             gi.AskNext(game.getCurrentPlayer());
-
-            while (true)
+            bool insteadOfBreak = true;
+            while (insteadOfBreak)
             {
                 game.Save();
 
@@ -77,14 +77,14 @@ namespace beadandoV3
                 if (game.hasPlayerWon(currentplayer))
                 {
                     gi.PrintPlayerWon(currentplayer);
-                    break;
+                    insteadOfBreak = false;
                 }
                 AskNextResult next = gi.AskNext(currentOpponent);
 
                 if (next == AskNextResult.FORFEIT)
                 {
                     gi.PrintPlayerWon(currentOpponent);
-                    break;
+                    insteadOfBreak = false;
                 }
                 else if (next == AskNextResult.SAVE)
                 {
