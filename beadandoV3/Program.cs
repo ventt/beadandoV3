@@ -9,8 +9,6 @@ namespace beadandoV3
 
     class Program
     {
-        private static string FILE_NAME = "../.../game.txt";
-
         static void Main(string[] args)
         {
 
@@ -20,8 +18,9 @@ namespace beadandoV3
             TestShip();
 
             Game game = new Game();
-           // GraphicInterface.AskShips(Player.PLAYER_1, game);
-           // GraphicInterface.AskShips(Player.PLAYER_2, game);
+            GraphicInterface gi = new GraphicInterface(game);
+            // gi.AskShips(Player.PLAYER_1, game);
+            // gi.AskShips(Player.PLAYER_2, game);
 
             /*game.addShip(new Ship(Player.PLAYER_1, new Point(2, 2), 2, Orientation.HORIZONTAL));
             game.addShip(new Ship(Player.PLAYER_1, new Point(3, 4), 3, Orientation.HORIZONTAL));
@@ -57,64 +56,42 @@ namespace beadandoV3
 
             //game.load(FILE_NAME);
 
-            
-            if (GraphicInterface.AskForGameStart(game))
+
+            bool loadShips = gi.AskForGameStart();
+            if (loadShips)
             {
-                game.load(FILE_NAME);
-                GraphicInterface.AskShips(Player.PLAYER_1, game);
-                GraphicInterface.AskShips(Player.PLAYER_2, game);
-                GraphicInterface.AskForNextPlayerOrForfeit(game.getCurrentPlayer());
-                while (true)
+                gi.AskShips(Player.PLAYER_1);
+                gi.AskShips(Player.PLAYER_2);
+            }
+
+            gi.AskNext(game.getCurrentPlayer());
+
+            while (true)
+            {
+                game.Save();
+
+                Player currentplayer = game.getCurrentPlayer();
+                Player currentOpponent = game.getCurrentOpponent();
+
+                gi.AskMove(currentplayer);
+                if (game.hasPlayerWon(currentplayer))
                 {
-                    game.Save(FILE_NAME, false);
+                    gi.PrintPlayerWon(currentplayer);
+                    break;
+                }
+                AskNextResult next = gi.AskNext(currentOpponent);
 
-                    Player currentplayer = game.getCurrentPlayer();
-                    Player currentOpponent = game.getCurrentOpponent();
-
-                    GraphicInterface.AskMove(currentplayer, game);
-                    if (game.hasPlayerWon(currentplayer))
-                    {
-                        GraphicInterface.PrintPlayerWon(currentplayer, game);
-                        break;
-                    }
-                    bool forfeit = GraphicInterface.AskForNextPlayerOrForfeit(currentOpponent);
-
-                    if (forfeit)
-                    {
-                        GraphicInterface.PrintPlayerWon(currentOpponent, game);
-                        break;
-                    }
+                if (next == AskNextResult.FORFEIT)
+                {
+                    gi.PrintPlayerWon(currentOpponent);
+                    break;
+                }
+                else if (next == AskNextResult.SAVE)
+                {
+                    return;
                 }
             }
-            else
-            {
-                GraphicInterface.AskShips(Player.PLAYER_1, game);
-                GraphicInterface.AskShips(Player.PLAYER_2, game);
-                GraphicInterface.AskForNextPlayerOrForfeit(game.getCurrentPlayer());
-                while (true)
-                {
-                    game.Save(FILE_NAME, false);
 
-                    Player currentplayer = game.getCurrentPlayer();
-                    Player currentOpponent = game.getCurrentOpponent();
-
-                    GraphicInterface.AskMove(currentplayer, game);
-                    if (game.hasPlayerWon(currentplayer))
-                    {
-                        GraphicInterface.PrintPlayerWon(currentplayer, game);
-                        break;
-                    }
-                    bool forfeit = GraphicInterface.AskForNextPlayerOrForfeit(currentOpponent);
-
-                    if (forfeit)
-                    {
-                        GraphicInterface.PrintPlayerWon(currentOpponent, game);
-                        break;
-                    }
-                }
-            }
-            
-            
 
             Console.ReadLine();
         }

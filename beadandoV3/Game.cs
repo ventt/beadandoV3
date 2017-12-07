@@ -33,6 +33,9 @@ namespace beadandoV3
 
         public Move[] moves = new Move[200];
         public int moveCount = 0;
+
+        public string fileName = "../../game.txt";
+
         public Player getCurrentPlayer()
         {
             if (moveCount % 2 == 0)
@@ -166,44 +169,22 @@ namespace beadandoV3
             sr.Close();
         }
 
-        public void Save(string file,bool saveByUser)
+        public void Save()
         {
-            if (saveByUser)
+            StreamWriter sw = new StreamWriter(fileName);
+
+            foreach (Ship ship in ships)
             {
-                Console.WriteLine("Adja meg a mentés nevét!(.txt nélkül)");
-                string fileNameByUser = Console.ReadLine();
-                StreamWriter sw = new StreamWriter("../.../"+fileNameByUser +"txt");
-                foreach (Ship ship in ships)
-                {
-                    sw.WriteLineAsync(ship.ToString());
-                }
-
-                for (int i = 0; i < moveCount; i++)
-                {
-                    sw.WriteLineAsync(moves[i].ToString());
-                }
-
-                sw.Flush();
-                sw.Close();
+                sw.WriteLineAsync(ship.ToString());
             }
-            else
+
+            for (int i = 0; i < moveCount; i++)
             {
-                StreamWriter sw = new StreamWriter(file);
-
-                foreach (Ship ship in ships)
-                {
-                    sw.WriteLineAsync(ship.ToString());
-                }
-
-                for (int i = 0; i < moveCount; i++)
-                {
-                    sw.WriteLineAsync(moves[i].ToString());
-                }
-
-                sw.Flush();
-                sw.Close();
+                sw.WriteLineAsync(moves[i].ToString());
             }
-            
+
+            sw.Flush();
+            sw.Close();
         }
 
 

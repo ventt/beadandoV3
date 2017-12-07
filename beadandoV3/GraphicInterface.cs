@@ -14,9 +14,23 @@ namespace beadandoV3
         MISSED
 
     }
-    static class GraphicInterface
+
+    enum AskNextResult
     {
-        static public void AskShips(Player player, Game game)
+        NEXT_PLAYER,
+        FORFEIT,
+        SAVE
+    }
+    class GraphicInterface
+    {
+        private Game game;
+
+        public GraphicInterface(Game game)
+        {
+            this.game = game;
+        }
+
+        public void AskShips(Player player)
         {
 
             for (int size = 4; size > 0; size--)
@@ -27,7 +41,7 @@ namespace beadandoV3
                 {
                     Console.WriteLine(PlayerName(player) + " hajói!");
                     Console.WriteLine("-----------------------------");
-                    PrintField(player, game, false);
+                    PrintField(player, false);
                     Console.WriteLine("A(z) {0} egység méretű hajójának koordinátái?", size);
                     AddShipResult result = game.addShip(new Ship(player, AskPoint(), size, (size == 1) ? Orientation.HORIZONTAL : AskOrientation()));
 
@@ -50,7 +64,7 @@ namespace beadandoV3
                 }
             }
         }
-        static public void PrintField(Player player, Game game, bool target)
+        public void PrintField(Player player, bool target)
         {
             // Létrehozunk egy 2 dimenziós tömböt, ami a csatatér pontjait tárolja
             FieldType[,] field = new FieldType[10, 10];
@@ -141,11 +155,11 @@ namespace beadandoV3
         }
 
 
-        static private string PlayerName(Player player)
+        private string PlayerName(Player player)
         {
             return (player == Player.PLAYER_1) ? "Első Játékos" : "Második Játékos";
         }
-        static private Point AskPoint()
+        private Point AskPoint()
         {
             Point result = new Point(0, 0);
             bool tryAgain = true;
@@ -189,42 +203,46 @@ namespace beadandoV3
             return result;
         }
 
-        static public bool AskForNextPlayerOrForfeit(Player player)
+        public AskNextResult AskNext(Player player)
         {
-            Console.WriteLine("Nyomjon egy entert a folytatáshoz vagy ird be, hogy 'forfeit' a feladashoz!");
-            if (Console.ReadLine() == "forfeit")
+            Console.WriteLine("Nyomjon egy entert a folytatáshoz vagy ird be, hogy 'forfeit' a feladashoz, vagy 'save' a mentéshez!");
+            string command = Console.ReadLine();
+            if (command == "forfeit")
             {
-                return true;
+                return AskNextResult.FORFEIT;
+            }
+            else if (command == "save")
+            {
+                Console.WriteLine("Adja meg a mentés nevét!(.txt nélkül)");
+                Console.Write(" > ");
+                string fileNameByUser = Console.ReadLine();
+                game.fileName = "../.../" + fileNameByUser + ".txt";
+                game.Save();
+                return AskNextResult.SAVE;
             }
             Console.Clear();
             Console.WriteLine(PlayerName(player) + " Következik, a pálya megjelenítéséhez nyomjon egy entert!");
             Console.ReadLine();
             Console.Clear();
-            return false;
+            return AskNextResult.NEXT_PLAYER;
         }
-        static public bool AskForGameStart(Game game)
+        public bool AskForGameStart()
         {
-            bool Starttype = true;
             Console.WriteLine("Üdv a Torpedó játékban!");
             Console.WriteLine("Szeretnéd folytatni az előző játékot, vagy új játékot kezdeni? Előző játék= I, Új játék= N");
             Console.WriteLine();
-            bool isItok = true;
-            while (isItok)
+            while (true)
             {
                 Console.Write("Válasz: ");
                 string init = Console.ReadLine();
-                if (init.ToLower()== "i")
+                if (init.ToLower() == "i")
                 {
-                    Starttype = true;
-                    isItok = false;
-                    Console.Clear();
+                    game.load(game.fileName);
+                    return false;
                 }
                 else if (init.ToLower() == "n")
                 {
-                    Starttype = false;
-                    isItok = false;
-                    Console.Clear();
-                    AskForUserLoad(game);
+                    return AskForUserLoad();
                 }
                 else
                 {
@@ -232,25 +250,24 @@ namespace beadandoV3
                     Console.Write("Válaszolj újra: ");
                 }
             }
-            return Starttype;
         }
-        static public void AskForUserLoad(Game game)
+        public bool AskForUserLoad()
         {
-            bool isItok = true;
-            while (isItok)
+            while (true)
             {
-                Console.WriteLine("Szeretnél saját játékot betölteni?! (I/N)" );
+                Console.Clear();
+                Console.WriteLine("Szeretnél saját játékot betölteni?! (I/N)");
                 string answer = Console.ReadLine();
                 if (answer.ToLower() == "i")
                 {
-                        Console.WriteLine("Fájl neve?(.txt nélkül)");
-                        string fileNameByUser = Console.ReadLine();
-                        game.load(fileNameByUser+"txt");
-                        isItok = false;
+                    Console.WriteLine("Fájl neve?(.txt nélkül)");
+                    string fileNameByUser = Console.ReadLine();
+                    game.load("../.../" + fileNameByUser + ".txt");
+                    return false;
                 }
                 else if (answer.ToLower() == "n")
                 {
-                    isItok = false;
+                    return true;
                 }
                 else
                 {
@@ -259,7 +276,7 @@ namespace beadandoV3
             }
         }
 
-        static private Orientation AskOrientation()
+        private Orientation AskOrientation()
         {
             while (true)
             {
@@ -276,7 +293,7 @@ namespace beadandoV3
             }
         }
 
-        public static void AskMove(Player player, Game game)
+        public void AskMove(Player player)
         {
             Player opponent = (player == Player.PLAYER_1) ? Player.PLAYER_2 : Player.PLAYER_1;
             MoveResult mr = MoveResult.OUT_OF_FIELD;
@@ -285,9 +302,9 @@ namespace beadandoV3
             while (tryAgain)
             {
                 Console.WriteLine(PlayerName(player));
-                PrintField(opponent, game, true);
-                PrintField(player, game, false);
-                Console.WriteLine("Hova lojjek fonok?");
+                PrintField(opponent, true);
+                PrintField(player, false);
+                Console.WriteLine("Hova löjjek főnök?");
                 mr = game.addMove(new Move(player, AskPoint()));
 
                 switch (mr)
@@ -305,28 +322,28 @@ namespace beadandoV3
                 Console.Clear();
             }
 
-            PrintField(opponent, game, true);
+            PrintField(opponent, true);
             Console.WriteLine();
-            PrintField(player, game, false);
+            PrintField(player, false);
             Console.WriteLine();
 
             switch (mr)
             {
                 case MoveResult.HIT:
-                    Console.WriteLine("Ugyes vagy talat");
+                    Console.WriteLine("Talált!");
                     break;
                 case MoveResult.MISSED:
-                    Console.WriteLine("Elbasztad");
+                    Console.WriteLine("Nem talált");
                     break;
             }
         }
-        public static void PrintPlayerWon(Player player, Game game)
+        public void PrintPlayerWon(Player player)
         {
             Console.Clear();
-            PrintField(player, game, false);
+            PrintField(player, false);
             Player opponent = (player == Player.PLAYER_1) ? Player.PLAYER_2 : Player.PLAYER_1;
-            PrintField(opponent, game, false);
-            Console.WriteLine(PlayerName(player)+" nyerte a játékot! Gratu!");
+            PrintField(opponent, false);
+            Console.WriteLine(PlayerName(player) + " nyerte a játékot!");
         }
     }
 
