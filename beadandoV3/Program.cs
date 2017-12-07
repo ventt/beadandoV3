@@ -11,7 +11,7 @@ namespace beadandoV3
     {
         static void Main(string[] args)
         {
-
+            //Először lefutnak a testek
             TestAddMove();
             TestAddShip();
             TestHasPlayerWon();
@@ -19,45 +19,8 @@ namespace beadandoV3
 
             Game game = new Game();
             GraphicInterface gi = new GraphicInterface(game);
-            // gi.AskShips(Player.PLAYER_1, game);
-            // gi.AskShips(Player.PLAYER_2, game);
 
-            /*game.addShip(new Ship(Player.PLAYER_1, new Point(2, 2), 2, Orientation.HORIZONTAL));
-            game.addShip(new Ship(Player.PLAYER_1, new Point(3, 4), 3, Orientation.HORIZONTAL));
-            game.addShip(new Ship(Player.PLAYER_1, new Point(7, 2), 4, Orientation.VERTICAL));
-            game.addShip(new Ship(Player.PLAYER_1, new Point(3, 6), 1, Orientation.HORIZONTAL));
-
-            game.addShip(new Ship(Player.PLAYER_2, new Point(0, 0), 2, Orientation.VERTICAL));
-            game.addShip(new Ship(Player.PLAYER_2, new Point(5, 4), 3, Orientation.HORIZONTAL));
-            game.addShip(new Ship(Player.PLAYER_2, new Point(3, 2), 4, Orientation.VERTICAL));
-            game.addShip(new Ship(Player.PLAYER_2, new Point(7, 6), 1, Orientation.HORIZONTAL));
-
-            game.addMove(new Move(Player.PLAYER_1, new Point(0, 0)));
-            game.addMove(new Move(Player.PLAYER_2, new Point(0, 0)));
-            game.addMove(new Move(Player.PLAYER_1, new Point(0, 1)));
-            game.addMove(new Move(Player.PLAYER_2, new Point(0, 1)));
-
-            game.addMove(new Move(Player.PLAYER_1, new Point(5, 4)));
-            game.addMove(new Move(Player.PLAYER_2, new Point(0, 2)));
-            game.addMove(new Move(Player.PLAYER_1, new Point(6, 4)));
-            game.addMove(new Move(Player.PLAYER_2, new Point(0, 3)));
-            game.addMove(new Move(Player.PLAYER_1, new Point(7, 4)));
-            game.addMove(new Move(Player.PLAYER_2, new Point(0, 4)));
-
-
-            game.addMove(new Move(Player.PLAYER_1, new Point(3, 2)));
-            game.addMove(new Move(Player.PLAYER_2, new Point(1, 0)));
-            game.addMove(new Move(Player.PLAYER_1, new Point(3, 3)));
-            game.addMove(new Move(Player.PLAYER_2, new Point(2, 0)));
-            game.addMove(new Move(Player.PLAYER_1, new Point(3, 4)));
-            game.addMove(new Move(Player.PLAYER_2, new Point(3, 0)));
-            game.addMove(new Move(Player.PLAYER_1, new Point(3, 5)));
-            game.addMove(new Move(Player.PLAYER_2, new Point(4, 0)));*/
-
-            //game.load(FILE_NAME);
-
-
-            bool loadShips = gi.AskForGameStart();
+            bool loadShips = gi.AskForGameStart();   
             if (loadShips)
             {
                 gi.AskShips(Player.PLAYER_1);
@@ -66,7 +29,7 @@ namespace beadandoV3
 
             gi.AskNext(game.getCurrentPlayer());
             bool insteadOfBreak = true;
-            while (insteadOfBreak)
+            while (insteadOfBreak)      //Játék menet
             {
                 game.Save();
 
@@ -142,6 +105,7 @@ namespace beadandoV3
         }
         static void TestAddShip()
         {
+            // Add Ship test
             Game game = new Game();
 
             if (game.addShip(new Ship(Player.PLAYER_1, new Point(2, 3), 3, Orientation.HORIZONTAL)) != AddShipResult.OK)
@@ -184,6 +148,7 @@ namespace beadandoV3
         }
         static void TestHasPlayerWon()
         {
+            // Player Won test
             Game game = new Game();
             game.addShip(new Ship(Player.PLAYER_1, new Point(2, 2), 2, Orientation.HORIZONTAL));
             game.addShip(new Ship(Player.PLAYER_1, new Point(3, 4), 3, Orientation.HORIZONTAL));

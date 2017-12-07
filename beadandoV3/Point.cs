@@ -8,6 +8,7 @@ namespace beadandoV3
 {
     class Point
     {
+        // Két koordináta
         public int x, y;
 
         public Point(int x, int y)
@@ -15,7 +16,7 @@ namespace beadandoV3
             this.x = x;
             this.y = y;
         }
-
+        // Két pont vizsgálata
         public bool SameAs(Point b)
         {
             return x == b.x && y == b.y;

@@ -64,12 +64,12 @@ namespace beadandoV3
                 }
             }
         }
-        public void PrintField(Player player, bool target)
+        public void PrintField(Player player, bool target)   //Ha target == true, akkor kiírja az ellenfél csataterét a hajók megjelenítése nélkül
         {
-            // Létrehozunk egy 2 dimenziós tömböt, ami a csatatér pontjait tárolja
+            // Létrehoz egy 2 dimenziós tömböt, ami a csatatér pontjait tárolja
             FieldType[,] field = new FieldType[10, 10];
 
-            // Minden olyan hajó minden pontját beállítjuk, ami a player-é
+            // Minden olyan hajó minden pontját beállítja, ami a player-é
             for (int shipIndex = 0; shipIndex < game.shipCount; shipIndex++)
             {
                 if (game.ships[shipIndex].player == player)
@@ -82,7 +82,7 @@ namespace beadandoV3
                 }
             }
 
-            Player opponent = (player == Player.PLAYER_1) ? Player.PLAYER_2 : Player.PLAYER_1;
+            Player opponent = (player == Player.PLAYER_1) ? Player.PLAYER_2 : Player.PLAYER_1; 
             for (int i = 0; i < game.moveCount; i++)
             {
                 if (game.moves[i].player == opponent)
@@ -155,7 +155,7 @@ namespace beadandoV3
         }
 
 
-        private string PlayerName(Player player)
+        private string PlayerName(Player player)  //Megadja a játékos nevét
         {
             return (player == Player.PLAYER_1) ? "Első Játékos" : "Második Játékos";
         }

@@ -17,7 +17,7 @@ namespace beadandoV3
             this.point = point;
         }
 
-        public override string ToString()
+        public override string ToString()  // Int beolvasást castol megadott Class típusra
         {
             return (int)player + "," + point.x + "," + point.y;
         }
