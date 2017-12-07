@@ -9,6 +9,7 @@ namespace beadandoV3
 
     class Program
     {
+        private static string FILE_NAME = "../.../game.txt";
 
         static void Main(string[] args)
         {
@@ -19,10 +20,10 @@ namespace beadandoV3
             TestShip();
 
             Game game = new Game();
-            //GraphicInterface.AskShips(Player.PLAYER_1, game);
-            //GraphicInterface.AskShips(Player.PLAYER_2, game);
+           // GraphicInterface.AskShips(Player.PLAYER_1, game);
+           // GraphicInterface.AskShips(Player.PLAYER_2, game);
 
-            game.addShip(new Ship(Player.PLAYER_1, new Point(2, 2), 2, Orientation.HORIZONTAL));
+            /*game.addShip(new Ship(Player.PLAYER_1, new Point(2, 2), 2, Orientation.HORIZONTAL));
             game.addShip(new Ship(Player.PLAYER_1, new Point(3, 4), 3, Orientation.HORIZONTAL));
             game.addShip(new Ship(Player.PLAYER_1, new Point(7, 2), 4, Orientation.VERTICAL));
             game.addShip(new Ship(Player.PLAYER_1, new Point(3, 6), 1, Orientation.HORIZONTAL));
@@ -52,29 +53,68 @@ namespace beadandoV3
             game.addMove(new Move(Player.PLAYER_1, new Point(3, 4)));
             game.addMove(new Move(Player.PLAYER_2, new Point(3, 0)));
             game.addMove(new Move(Player.PLAYER_1, new Point(3, 5)));
-            game.addMove(new Move(Player.PLAYER_2, new Point(4, 0)));
+            game.addMove(new Move(Player.PLAYER_2, new Point(4, 0)));*/
 
-            while (true)
+            //game.load(FILE_NAME);
+
+            
+            if (GraphicInterface.AskForGameStart(game))
             {
-                game.save();
-
-                Player currentplayer = game.getCurrentPlayer();
-                Player currentOpponent = game.getCurrentOpponent();
-
-                GraphicInterface.AskMove(currentplayer, game);
-                if (game.hasPlayerWon(currentplayer))
+                game.load(FILE_NAME);
+                GraphicInterface.AskShips(Player.PLAYER_1, game);
+                GraphicInterface.AskShips(Player.PLAYER_2, game);
+                GraphicInterface.AskForNextPlayerOrForfeit(game.getCurrentPlayer());
+                while (true)
                 {
-                    GraphicInterface.PrintPlayerWon(currentplayer, game);
-                    break;
-                }
-                bool forfeit = GraphicInterface.AskForNextPlayerOrForfeit(currentOpponent);
+                    game.Save(FILE_NAME, false);
 
-                if (forfeit)
-                {
-                    GraphicInterface.PrintPlayerWon(currentOpponent, game);
-                    break;
+                    Player currentplayer = game.getCurrentPlayer();
+                    Player currentOpponent = game.getCurrentOpponent();
+
+                    GraphicInterface.AskMove(currentplayer, game);
+                    if (game.hasPlayerWon(currentplayer))
+                    {
+                        GraphicInterface.PrintPlayerWon(currentplayer, game);
+                        break;
+                    }
+                    bool forfeit = GraphicInterface.AskForNextPlayerOrForfeit(currentOpponent);
+
+                    if (forfeit)
+                    {
+                        GraphicInterface.PrintPlayerWon(currentOpponent, game);
+                        break;
+                    }
                 }
             }
+            else
+            {
+                GraphicInterface.AskShips(Player.PLAYER_1, game);
+                GraphicInterface.AskShips(Player.PLAYER_2, game);
+                GraphicInterface.AskForNextPlayerOrForfeit(game.getCurrentPlayer());
+                while (true)
+                {
+                    game.Save(FILE_NAME, false);
+
+                    Player currentplayer = game.getCurrentPlayer();
+                    Player currentOpponent = game.getCurrentOpponent();
+
+                    GraphicInterface.AskMove(currentplayer, game);
+                    if (game.hasPlayerWon(currentplayer))
+                    {
+                        GraphicInterface.PrintPlayerWon(currentplayer, game);
+                        break;
+                    }
+                    bool forfeit = GraphicInterface.AskForNextPlayerOrForfeit(currentOpponent);
+
+                    if (forfeit)
+                    {
+                        GraphicInterface.PrintPlayerWon(currentOpponent, game);
+                        break;
+                    }
+                }
+            }
+            
+            
 
             Console.ReadLine();
         }

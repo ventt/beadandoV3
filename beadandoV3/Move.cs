@@ -16,5 +16,10 @@ namespace beadandoV3
             this.player = player;
             this.point = point;
         }
+
+        public override string ToString()
+        {
+            return (int)player + "," + point.x + "," + point.y;
+        }
     }
 }

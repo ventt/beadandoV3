@@ -146,17 +146,64 @@ namespace beadandoV3
             return false;
         }
 
-        public void save()
+        public void load(string file)
         {
-            StreamWriter sw = new StreamWriter("game.txt");
+            StreamReader sr = new StreamReader(file);
 
-            foreach (Ship ship in ships)
+            for (int i = 0; i < 8; i++)
             {
-                sw.WriteLineAsync(ship.ToString());
+                int[] nums = Array.ConvertAll(sr.ReadLine().Split(','), int.Parse);
+                ships[shipCount++] = new Ship((Player)nums[0], new Point(nums[1], nums[2]), nums[3], (Orientation)nums[4]);
             }
 
-            sw.Flush();
-            sw.Close();
+            while (!sr.EndOfStream)
+            {
+                int[] nums = Array.ConvertAll(sr.ReadLine().Split(','), int.Parse);
+                moves[moveCount++] = new Move((Player)nums[0], new Point(nums[1], nums[2]));
+            }
+
+
+            sr.Close();
+        }
+
+        public void Save(string file,bool saveByUser)
+        {
+            if (saveByUser)
+            {
+                Console.WriteLine("Adja meg a mentés nevét!(.txt nélkül)");
+                string fileNameByUser = Console.ReadLine();
+                StreamWriter sw = new StreamWriter("../.../"+fileNameByUser +"txt");
+                foreach (Ship ship in ships)
+                {
+                    sw.WriteLineAsync(ship.ToString());
+                }
+
+                for (int i = 0; i < moveCount; i++)
+                {
+                    sw.WriteLineAsync(moves[i].ToString());
+                }
+
+                sw.Flush();
+                sw.Close();
+            }
+            else
+            {
+                StreamWriter sw = new StreamWriter(file);
+
+                foreach (Ship ship in ships)
+                {
+                    sw.WriteLineAsync(ship.ToString());
+                }
+
+                for (int i = 0; i < moveCount; i++)
+                {
+                    sw.WriteLineAsync(moves[i].ToString());
+                }
+
+                sw.Flush();
+                sw.Close();
+            }
+            
         }
 
 

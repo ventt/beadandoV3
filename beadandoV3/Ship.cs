@@ -49,7 +49,7 @@ namespace beadandoV3
 
         public override string ToString()
         {
-            return player + "," + point.x + "," + point.y + "," + size + "," + orientation;
+            return (int)player + "," + point.x + "," + point.y + "," + size + "," + (int)orientation;
         }
     }
 }

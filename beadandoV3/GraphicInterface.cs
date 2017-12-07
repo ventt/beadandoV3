@@ -202,6 +202,62 @@ namespace beadandoV3
             Console.Clear();
             return false;
         }
+        static public bool AskForGameStart(Game game)
+        {
+            bool Starttype = true;
+            Console.WriteLine("Üdv a Torpedó játékban!");
+            Console.WriteLine("Szeretnéd folytatni az előző játékot, vagy új játékot kezdeni? Előző játék= I, Új játék= N");
+            Console.WriteLine();
+            bool isItok = true;
+            while (isItok)
+            {
+                Console.Write("Válasz: ");
+                string init = Console.ReadLine();
+                if (init.ToLower()== "i")
+                {
+                    Starttype = true;
+                    isItok = false;
+                    Console.Clear();
+                }
+                else if (init.ToLower() == "n")
+                {
+                    Starttype = false;
+                    isItok = false;
+                    Console.Clear();
+                    AskForUserLoad(game);
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.Write("Válaszolj újra: ");
+                }
+            }
+            return Starttype;
+        }
+        static public void AskForUserLoad(Game game)
+        {
+            bool isItok = true;
+            while (isItok)
+            {
+                Console.WriteLine("Szeretnél saját játékot betölteni?! (I/N)" );
+                string answer = Console.ReadLine();
+                if (answer.ToLower() == "i")
+                {
+                        Console.WriteLine("Fájl neve?(.txt nélkül)");
+                        string fileNameByUser = Console.ReadLine();
+                        game.load(fileNameByUser+"txt");
+                        isItok = false;
+                }
+                else if (answer.ToLower() == "n")
+                {
+                    isItok = false;
+                }
+                else
+                {
+                    Console.WriteLine("Szóval?");
+                }
+            }
+        }
 
         static private Orientation AskOrientation()
         {
